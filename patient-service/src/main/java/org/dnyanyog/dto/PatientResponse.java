@@ -7,7 +7,7 @@ public class PatientResponse {
 
   private String status;
   private String message;
-  private String patient_name_english;
+  private String patientNameEnglish;
   private String patient_name_marathi;
   private String mobile;
   private String gender;
@@ -44,12 +44,12 @@ public class PatientResponse {
     this.message = message;
   }
 
-  public String getPatient_name_english() {
-    return patient_name_english;
+  public String getPatientNameEnglish() {
+    return patientNameEnglish;
   }
 
-  public void setPatient_name_english(String patient_name_english) {
-    this.patient_name_english = patient_name_english;
+  public void setPatientNameEnglish(String patientNameEnglish) {
+    this.patientNameEnglish = patientNameEnglish;
   }
 
   public String getPatient_name_marathi() {

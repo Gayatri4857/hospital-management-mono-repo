@@ -18,7 +18,7 @@ public class PatientData {
   @NotNull(message = "Username is mandatory")
   @NotBlank(message = "Username should not be blank")
   @Size(max = 50, message = "Username length should be at most 50 characters")
-  private String patient_name_english;
+  private String patientNameEnglish;
 
   @NotNull(message = "Username in Marathi is mandatory")
   @NotBlank(message = "Username in Marathi should not be blank")
@@ -54,12 +54,12 @@ public class PatientData {
   @Size(max = 255, message = "Address length should be at most 255 characters")
   private String address;
 
-  public String getPatient_name_english() {
-    return patient_name_english;
+  public String getPatientNameEnglish() {
+    return patientNameEnglish;
   }
 
-  public void setPatient_name_english(String patient_name_english) {
-    this.patient_name_english = patient_name_english;
+  public void setPatientNameEnglish(String patientNameEnglish) {
+    this.patientNameEnglish = patientNameEnglish;
   }
 
   public String getPatient_name_marathi() {

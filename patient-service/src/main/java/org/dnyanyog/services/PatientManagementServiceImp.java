@@ -20,26 +20,25 @@ public class PatientManagementServiceImp {
   @Autowired private PatientResponse patientResponse;
 
   public PatientResponse addPatient(@Valid PatientRequest request) throws Exception {
-
-    PatientResponse patientResponse = PatientResponse.getInstance();
-
-    /*if (patientRepo.existsByUsername(request.getPatient_name_english())
-        || patientRepo.existsByBirth_date(request.getBirth_date())) {
-    	patientResponse.setStatus(ResponseCode.SAME_USERNAME_EMAIL.getStatus());
-    	patientResponse.setMessage(ResponseCode.SAME_USERNAME_EMAIL.getMessage());
-      return patientResponse;
-    }*/
-
-    Patients newPatient = new Patients();
-    newPatient.setAddress(request.getAddress());
-    newPatient.setBirth_date(request.getBirth_date());
-    newPatient.setFirst_examination_date(request.getFirst_examination_date());
-    newPatient.setGender(request.getGender());
-    newPatient.setMobile(request.getMobile());
-    newPatient.setPatient_name_english(request.getPatient_name_english());
-    newPatient.setPatient_name_marathi(request.getPatient_name_marathi());
-
     try {
+      List<Patients> optionalPatient =
+          patientRepo.findBypatientNameEnglish(request.getPatientNameEnglish());
+
+      if (!optionalPatient.isEmpty()) {
+        patientResponse.setStatus(ResponseCode.PATIENT_FAILED.getStatus());
+        patientResponse.setMessage(ResponseCode.PATIENT_FAILED.getMessage());
+        return patientResponse;
+      }
+
+      Patients newPatient = new Patients();
+      newPatient.setAddress(request.getAddress());
+      newPatient.setBirth_date(request.getBirth_date());
+      newPatient.setFirst_examination_date(request.getFirst_examination_date());
+      newPatient.setGender(request.getGender());
+      newPatient.setMobile(request.getMobile());
+      newPatient.setPatientNameEnglish(request.getPatientNameEnglish());
+      newPatient.setPatient_name_marathi(request.getPatient_name_marathi());
+
       newPatient = patientRepo.save(newPatient);
       populatePatientResponse(patientResponse, newPatient);
       patientResponse.setStatus(ResponseCode.PATIENT_ADDED.getStatus());
@@ -50,16 +49,6 @@ public class PatientManagementServiceImp {
     }
 
     return patientResponse;
-  }
-
-  private void populatePatientResponse(PatientResponse response, Patients patient) {
-    response.setAddress(patient.getAddress());
-    response.setBirth_date(patient.getBirth_date());
-    response.setFirst_examination_date(patient.getFirst_examination_date());
-    response.setGender(patient.getGender());
-    response.setMobile(patient.getMobile());
-    response.setPatient_name_english(patient.getPatient_name_english());
-    response.setPatient_name_marathi(patient.getPatient_name_marathi());
   }
 
   public PatientResponse updatePatient(long patient_id, PatientRequest request) {
@@ -77,7 +66,7 @@ public class PatientManagementServiceImp {
       patients.setBirth_date(request.getBirth_date());
       patients.setFirst_examination_date(request.getFirst_examination_date());
       patients.setGender(request.getGender());
-      patients.setPatient_name_english(request.getPatient_name_english());
+      patients.setPatientNameEnglish(request.getPatientNameEnglish());
       patients.setPatient_name_marathi(request.getPatient_name_marathi());
 
       patientRepo.save(patients);
@@ -125,9 +114,19 @@ public class PatientManagementServiceImp {
       patientResponse.setGender(patients.getGender());
       patientResponse.setFirst_examination_date(patients.getFirst_examination_date());
       patientResponse.setMobile(patients.getMobile());
-      patientResponse.setPatient_name_english(patients.getPatient_name_english());
+      patientResponse.setPatientNameEnglish(patients.getPatientNameEnglish());
       patientResponse.setPatient_name_marathi(patients.getPatient_name_marathi());
     }
     return patientResponse;
+  }
+
+  private void populatePatientResponse(PatientResponse response, Patients patient) {
+    response.setAddress(patient.getAddress());
+    response.setBirth_date(patient.getBirth_date());
+    response.setFirst_examination_date(patient.getFirst_examination_date());
+    response.setGender(patient.getGender());
+    response.setMobile(patient.getMobile());
+    response.setPatientNameEnglish(patient.getPatientNameEnglish());
+    response.setPatient_name_marathi(patient.getPatient_name_marathi());
   }
 }

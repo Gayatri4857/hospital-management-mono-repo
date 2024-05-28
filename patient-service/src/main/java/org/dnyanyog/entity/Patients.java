@@ -21,8 +21,13 @@ public class Patients {
   @Column(name = "PatientId", nullable = false, insertable = true, updatable = false)
   private long patient_id;
 
-  @Column(nullable = false, insertable = true, updatable = false, length = 50)
-  private String patient_name_english;
+  @Column(
+      name = "patient_name_english",
+      nullable = false,
+      insertable = true,
+      updatable = false,
+      length = 50)
+  private String patientNameEnglish;
 
   @Column(nullable = false, insertable = true, updatable = false, length = 50)
   private String patient_name_marathi;
@@ -37,12 +42,20 @@ public class Patients {
 
   @Column private String address;
 
-  public String getPatient_name_english() {
-    return patient_name_english;
+  public long getPatient_id() {
+    return patient_id;
   }
 
-  public void setPatient_name_english(String patient_name_english) {
-    this.patient_name_english = patient_name_english;
+  public void setPatient_id(long patient_id) {
+    this.patient_id = patient_id;
+  }
+
+  public String getPatientNameEnglish() {
+    return patientNameEnglish;
+  }
+
+  public void setPatientNameEnglish(String patientNameEnglish) {
+    this.patientNameEnglish = patientNameEnglish;
   }
 
   public String getPatient_name_marathi() {

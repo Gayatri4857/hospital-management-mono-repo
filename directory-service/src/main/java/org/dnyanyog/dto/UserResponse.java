@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserResponse {
 
-  private String user_name;
+  private String userName;
   private String email;
   private String mobileNumber;
   private String role;
@@ -27,12 +27,12 @@ public class UserResponse {
     this.patient_id = patient_id;
   }
 
-  public String getUser_name() {
-    return user_name;
+  public String getUserName() {
+    return userName;
   }
 
-  public void setUser_name(String user_name) {
-    this.user_name = user_name;
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 
   public String getEmail() {

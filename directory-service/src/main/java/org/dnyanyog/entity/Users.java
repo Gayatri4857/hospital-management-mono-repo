@@ -23,8 +23,8 @@ public class Users {
   @Column(name = "PatientId", nullable = false, insertable = true, updatable = false)
   private long patient_id;
 
-  @Column(nullable = false, insertable = true, updatable = false, length = 50)
-  private String user_name;
+  @Column(name = "user_name", nullable = false, insertable = true, updatable = false, length = 50)
+  private String userName;
 
   @Column private String email;
 
@@ -37,10 +37,6 @@ public class Users {
 
   @Column private String confirm_password;
 
-  @Column(nullable = false)
-  private String passwordHash;
-  
-  
   @Column private String encryptionKey;
 
   public enum Status {
@@ -52,21 +48,12 @@ public class Users {
   @Enumerated(EnumType.STRING)
   private Status status;
 
-  
   public String getEncryptionKey() {
-      return encryptionKey;
+    return encryptionKey;
   }
 
   public void setEncryptionKey(String encryptionKey) {
-      this.encryptionKey = encryptionKey;
-  }
-  
-  public String getPasswordHash() {
-    return passwordHash;
-  }
-
-  public void setPasswordHash(String passwordHash) {
-    this.passwordHash = passwordHash;
+    this.encryptionKey = encryptionKey;
   }
 
   public long getPatient_id() {
@@ -77,12 +64,12 @@ public class Users {
     this.patient_id = patient_id;
   }
 
-  public String getUser_name() {
-    return user_name;
+  public String getUserName() {
+    return userName;
   }
 
-  public void setUser_name(String user_name) {
-    this.user_name = user_name;
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 
   public String getEmail() {

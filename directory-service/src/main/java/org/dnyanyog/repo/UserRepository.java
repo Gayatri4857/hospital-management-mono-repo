@@ -11,5 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Component
 public interface UserRepository extends JpaRepository<Users, Long> {
-	List<Users> findBymobileNumber(String mobile_number);
+  List<Users> findBymobileNumber(String mobile_number);
+
+  List<Users> findByuserName(String user_name);
 }

@@ -2,6 +2,7 @@ package org.dnyanyog.service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 import javax.crypto.Cipher;
@@ -16,7 +17,6 @@ import org.dnyanyog.entity.Users;
 import org.dnyanyog.exception.PasswordMismatchException;
 import org.dnyanyog.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.Valid;
@@ -24,147 +24,147 @@ import jakarta.validation.Valid;
 @Service
 public class UserManagementSeriveImp {
 
-    @Autowired private UserRepository userRepo;
-    @Autowired private UserResponse userResponse;
+  @Autowired private UserRepository userRepo;
+  @Autowired private UserResponse userResponse;
 
-    public UserResponse addUser(@Valid UserRequest request) throws Exception {
+  public UserResponse addUser(@Valid UserRequest request) throws Exception {
+    try {
+      // UserResponse userResponse = UserResponse.getInstance();
 
-        UserResponse userResponse = UserResponse.getInstance();
+      if (!request.isPasswordMatching()) {
+        throw new PasswordMismatchException("Password and Confirm Password do not match");
+      }
 
-        if (!request.isPasswordMatching()) {
-            throw new PasswordMismatchException("Password and Confirm Password do not match");
-        }
+      List<Users> optionalUser = userRepo.findByuserName(request.getUserName());
 
-        Users newUser = new Users();
-        String userKey = generateAESKey();
-        newUser.setConfirm_password(encryptAES(request.getConfirm_password(), userKey));
-        newUser.setEmail(request.getEmail());
-        newUser.setMobileNumber(request.getMobileNumber());
-        newUser.setPassword(encryptAES(request.getPassword(), userKey));
-        newUser.setPasswordHash(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
-        newUser.setRole(request.getRole());
-        newUser.setUser_name(request.getUser_name());
-        newUser.setStatus(Users.Status.ACTIVE);
-        newUser.setEncryptionKey(userKey);
-
-        try {
-            newUser = userRepo.save(newUser);
-            populateUserResponse(userResponse, newUser);
-            userResponse.setStatus(ResponseCode.USER_ADDED.getStatus());
-            userResponse.setMessage(ResponseCode.USER_ADDED.getMessage());
-        } catch (Exception e) {
-            userResponse.setStatus(ResponseCode.USER_FAILED.getStatus());
-            userResponse.setMessage(ResponseCode.USER_FAILED.getMessage());
-        }
-
+      if (!optionalUser.isEmpty()) {
+        userResponse.setStatus(ResponseCode.USER_FAILED.getStatus());
+        userResponse.setMessage(ResponseCode.USER_FAILED.getMessage());
         return userResponse;
+      }
+
+      Users newUser = new Users();
+      String userKey = generateAESKey();
+      newUser.setConfirm_password(encryptAES(request.getConfirm_password(), userKey));
+      newUser.setEmail(request.getEmail());
+      newUser.setMobileNumber(request.getMobileNumber());
+      newUser.setPassword(encryptAES(request.getPassword(), userKey));
+      newUser.setRole(request.getRole());
+      newUser.setUserName(request.getUserName());
+      newUser.setStatus(Users.Status.ACTIVE);
+      newUser.setEncryptionKey(userKey);
+
+      newUser = userRepo.save(newUser);
+
+      userResponse.setStatus(ResponseCode.USER_ADDED.getStatus());
+      userResponse.setMessage(ResponseCode.USER_ADDED.getMessage());
+      populateUserResponse(userResponse, newUser);
+
+    } catch (Exception e) {
+      userResponse.setStatus(ResponseCode.USER_FAILED.getStatus());
+      userResponse.setMessage(ResponseCode.USER_FAILED.getMessage());
     }
 
-    public UserResponse updateUser(long patient_id, UserRequest request) {
+    return userResponse;
+  }
 
-        Optional<Users> optionalUser = userRepo.findById(patient_id);
+  public UserResponse updateUser(long patient_id, UserRequest request) {
 
-        if (optionalUser.isEmpty()) {
-            userResponse.setMessage(ResponseCode.USER_NOT_UPDATED.getMessage());
-            userResponse.setStatus(ResponseCode.USER_NOT_UPDATED.getStatus());
-        } else {
-            Users user = optionalUser.get();
-            String userKey = user.getEncryptionKey();
+    Optional<Users> optionalUser = userRepo.findById(patient_id);
 
-            if (request.getConfirm_password() != null && userKey != null) {
-                user.setConfirm_password(encryptAES(request.getConfirm_password(), userKey));
-            }
-            if (request.getPassword() != null && userKey != null) {
-                user.setPassword(encryptAES(request.getPassword(), userKey));
-            }
-            user.setEmail(request.getEmail());
-            user.setMobileNumber(request.getMobileNumber());
-            user.setRole(request.getRole());
-            user.setUser_name(request.getUser_name());
+    if (optionalUser.isEmpty()) {
+      userResponse.setMessage(ResponseCode.USER_NOT_UPDATED.getMessage());
+      userResponse.setStatus(ResponseCode.USER_NOT_UPDATED.getStatus());
+    } else {
+      Users user = optionalUser.get();
+      String userKey = user.getEncryptionKey();
 
-            userRepo.save(user);
+      if (request.getConfirm_password() != null && userKey != null) {
+        user.setConfirm_password(encryptAES(request.getConfirm_password(), userKey));
+      }
+      if (request.getPassword() != null && userKey != null) {
+        user.setPassword(encryptAES(request.getPassword(), userKey));
+      }
+      user.setEmail(request.getEmail());
+      user.setMobileNumber(request.getMobileNumber());
+      user.setRole(request.getRole());
+      user.setUserName(request.getUserName());
 
-            populateUserResponse(userResponse, user);
-            userResponse.setMessage(ResponseCode.USER_UPDATED.getMessage());
-            userResponse.setStatus(ResponseCode.USER_UPDATED.getStatus());
-        }
-        return userResponse;
+      userRepo.save(user);
+
+      populateUserResponse(userResponse, user);
+      userResponse.setMessage(ResponseCode.USER_UPDATED.getMessage());
+      userResponse.setStatus(ResponseCode.USER_UPDATED.getStatus());
     }
+    return userResponse;
+  }
 
-    public UserResponse getSingleUser(long patient_id) {
-        Optional<Users> optionalUser = userRepo.findById(patient_id);
+  public UserResponse getSingleUser(long patient_id) {
+    Optional<Users> optionalUser = userRepo.findById(patient_id);
 
-        UserResponse userResponse = UserResponse.getInstance();
-        if (optionalUser.isEmpty()) {
-            userResponse.setMessage(ResponseCode.SEARCH_USER_FAILED.getMessage());
-            userResponse.setStatus(ResponseCode.SEARCH_USER_FAILED.getStatus());
-        } else {
-            Users user = optionalUser.get();
-            populateUserResponse(userResponse, user);
-            userResponse.setMessage(ResponseCode.SEARCH_USER.getMessage());
-            userResponse.setStatus(ResponseCode.SEARCH_USER.getStatus());
-        }
-        return userResponse;
+    UserResponse userResponse = UserResponse.getInstance();
+    if (optionalUser.isEmpty()) {
+      userResponse.setMessage(ResponseCode.SEARCH_USER_FAILED.getMessage());
+      userResponse.setStatus(ResponseCode.SEARCH_USER_FAILED.getStatus());
+    } else {
+      Users user = optionalUser.get();
+      populateUserResponse(userResponse, user);
+      userResponse.setMessage(ResponseCode.SEARCH_USER.getMessage());
+      userResponse.setStatus(ResponseCode.SEARCH_USER.getStatus());
     }
+    return userResponse;
+  }
 
-    public UserResponse deleteUser(long patient_id) {
-        Optional<Users> optionalUser = userRepo.findById(patient_id);
+  public UserResponse deleteUser(long patient_id) {
+    Optional<Users> optionalUser = userRepo.findById(patient_id);
 
-        if (optionalUser.isEmpty()) {
-            userResponse.setMessage(ResponseCode.NOT_DELETE_USER.getMessage());
-            userResponse.setStatus(ResponseCode.NOT_DELETE_USER.getStatus());
-        } else {
-            Users user = optionalUser.get();
-            user.setStatus(Users.Status.DELETED); 
-            userRepo.save(user);
+    if (optionalUser.isEmpty()) {
+      userResponse.setMessage(ResponseCode.NOT_DELETE_USER.getMessage());
+      userResponse.setStatus(ResponseCode.NOT_DELETE_USER.getStatus());
+    } else {
+      Users user = optionalUser.get();
+      user.setStatus(Users.Status.DELETED);
+      userRepo.save(user);
 
-            userResponse.setMessage(ResponseCode.DELETE_USER.getMessage());
-            userResponse.setStatus(ResponseCode.DELETE_USER.getStatus());
-            populateUserResponse(userResponse, user);
-        }
-        return userResponse;
+      userResponse.setMessage(ResponseCode.DELETE_USER.getMessage());
+      userResponse.setStatus(ResponseCode.DELETE_USER.getStatus());
+      populateUserResponse(userResponse, user);
     }
+    return userResponse;
+  }
 
-    private void populateUserResponse(UserResponse response, Users users) {
-    
-        response.setEmail(users.getEmail());
-        response.setMobileNumber(users.getMobileNumber());
-        response.setRole(users.getRole());
-        response.setUser_name(users.getUser_name());
-    }
+  private void populateUserResponse(UserResponse response, Users users) {
 
-    private String encryptAES(String input, String key) {
-        if (input == null || key == null) {
-            throw new IllegalArgumentException("Input and key cannot be null");
-        }
-        try {
-            Cipher cipher = Cipher.getInstance("AES");
-            SecretKeySpec secretKeySpec = new SecretKeySpec(Base64.getDecoder().decode(key), "AES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-            byte[] encryptedBytes = cipher.doFinal(input.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(encryptedBytes);
-        } catch (Exception e) {
-            throw new RuntimeException("Error encrypting with AES", e);
-        }
-    }
+    response.setEmail(users.getEmail());
+    response.setMobileNumber(users.getMobileNumber());
+    response.setRole(users.getRole());
+    response.setUserName(users.getUserName());
+  }
 
-    private String generateAESKey() {
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-            keyGen.init(256);
-            SecretKey secretKey = keyGen.generateKey();
-            byte[] encodedKey = secretKey.getEncoded();
-            return Base64.getEncoder().encodeToString(encodedKey);
-        } catch (Exception e) {
-            throw new RuntimeException("Error generating AES key", e);
-        }
+  private String encryptAES(String input, String key) {
+    if (input == null || key == null) {
+      throw new IllegalArgumentException("Input and key cannot be null");
     }
+    try {
+      Cipher cipher = Cipher.getInstance("AES");
+      SecretKeySpec secretKeySpec = new SecretKeySpec(Base64.getDecoder().decode(key), "AES");
+      cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+      byte[] encryptedBytes = cipher.doFinal(input.getBytes(StandardCharsets.UTF_8));
+      return Base64.getEncoder().encodeToString(encryptedBytes);
+    } catch (Exception e) {
+      throw new RuntimeException("Error encrypting with AES", e);
+    }
+  }
+
+  private String generateAESKey() {
+    try {
+      KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+      keyGen.init(256);
+      SecretKey secretKey = keyGen.generateKey();
+      byte[] encodedKey = secretKey.getEncoded();
+      return Base64.getEncoder().encodeToString(encodedKey);
+    } catch (Exception e) {
+      throw new RuntimeException("Error generating AES key", e);
+    }
+  }
 }
-
-
-
-
-
-
-
-
