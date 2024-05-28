@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -26,13 +28,46 @@ public class Users {
 
   @Column private String email;
 
-  @Column private String mobile_number;
+  @Column(name = "mobile_number")
+  private String mobileNumber;
 
   @Column private String role;
 
   @Column private String password;
 
   @Column private String confirm_password;
+
+  @Column(nullable = false)
+  private String passwordHash;
+  
+  
+  @Column private String encryptionKey;
+
+  public enum Status {
+    ACTIVE,
+    EXPIRED,
+    DELETED
+  }
+
+  @Enumerated(EnumType.STRING)
+  private Status status;
+
+  
+  public String getEncryptionKey() {
+      return encryptionKey;
+  }
+
+  public void setEncryptionKey(String encryptionKey) {
+      this.encryptionKey = encryptionKey;
+  }
+  
+  public String getPasswordHash() {
+    return passwordHash;
+  }
+
+  public void setPasswordHash(String passwordHash) {
+    this.passwordHash = passwordHash;
+  }
 
   public long getPatient_id() {
     return patient_id;
@@ -58,12 +93,12 @@ public class Users {
     this.email = email;
   }
 
-  public String getMobile_number() {
-    return mobile_number;
+  public String getMobileNumber() {
+    return mobileNumber;
   }
 
-  public void setMobile_number(String mobile_number) {
-    this.mobile_number = mobile_number;
+  public void setMobileNumber(String mobileNumber) {
+    this.mobileNumber = mobileNumber;
   }
 
   public String getRole() {
@@ -88,5 +123,13 @@ public class Users {
 
   public void setConfirm_password(String confirm_password) {
     this.confirm_password = confirm_password;
+  }
+
+  public Status getStatus() {
+    return status;
+  }
+
+  public void setStatus(Status status) {
+    this.status = status;
   }
 }

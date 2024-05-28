@@ -7,7 +7,7 @@ public class UserResponse {
 
   private String user_name;
   private String email;
-  private String mobile_number;
+  private String mobileNumber;
   private String role;
   private String password;
   private String confirm_password;
@@ -43,12 +43,12 @@ public class UserResponse {
     this.email = email;
   }
 
-  public String getMobile_number() {
-    return mobile_number;
+  public String getMobileNumber() {
+    return mobileNumber;
   }
 
-  public void setMobile_number(String mobile_number) {
-    this.mobile_number = mobile_number;
+  public void setMobileNumber(String mobileNumber) {
+    this.mobileNumber = mobileNumber;
   }
 
   public String getRole() {

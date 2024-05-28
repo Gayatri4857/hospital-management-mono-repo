@@ -20,7 +20,7 @@ public class UserData {
 
   @NotBlank(message = "Mobile number is mandatory")
   @Pattern(regexp = "^[0-9]{10}$", message = "Mobile number should be 10 digits")
-  private String mobile_number;
+  private String mobileNumber;
 
   @NotBlank(message = "Role is mandatory")
   private String role;
@@ -49,12 +49,12 @@ public class UserData {
     this.email = email;
   }
 
-  public String getMobile_number() {
-    return mobile_number;
+  public String getMobileNumber() {
+    return mobileNumber;
   }
 
-  public void setMobile_number(String mobile_number) {
-    this.mobile_number = mobile_number;
+  public void setMobileNumber(String mobileNumber) {
+    this.mobileNumber = mobileNumber;
   }
 
   public String getRole() {
@@ -79,5 +79,9 @@ public class UserData {
 
   public void setConfirm_password(String confirm_password) {
     this.confirm_password = confirm_password;
+  }
+
+  public boolean isPasswordMatching() {
+    return this.password.equals(this.confirm_password);
   }
 }

@@ -9,7 +9,9 @@ public enum ResponseCode {
   SEARCH_USER("Success", "User found successfully!"),
   SEARCH_USER_FAILED("Fail", "User not found or invalid request!"),
   NOT_DELETE_USER("Fail", "User not deleted !"),
-  DELETE_USER("Success", "User deleted successfully !");
+  DELETE_USER("Success", "User deleted successfully !"),
+  LOGIN_SUCCESS("Success", "Login successful"),
+  LOGIN_FAIL("Fail", "Login failed");
 
   private final String status;
   private final String message;
