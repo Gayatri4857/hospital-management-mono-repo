@@ -42,25 +42,25 @@ public class Appointment {
   @Column private String appointment_time;
 
   @Column private String examination_date;
-  
-  public enum Status {
-	    ACTIVE,
-	    EXPIRED,
-	    DELETED
-	  }
 
-	  @Enumerated(EnumType.STRING)
-	  private Status status;
-	  
-	  
+  public enum Status {
+    ACTIVE,
+    EXPIRED,
+    DELETED
+  }
+
+  @Enumerated(EnumType.STRING)
+  private Status status;
 
   public Status getStatus() {
-  return status;}
+    return status;
+  }
 
   public void setStatus(Status status) {
-  this.status = status;}
+    this.status = status;
+  }
 
-public long getPatient_code() {
+  public long getPatient_code() {
     return patient_code;
   }
 
@@ -107,16 +107,16 @@ public long getPatient_code() {
   public void setExamination_date(String examination_date) {
     this.examination_date = examination_date;
   }
-  
+
   private String generateRandomAlphanumeric(int length) {
-      return UUID.randomUUID().toString().replace("-", "").substring(0, length).toUpperCase();
+    return UUID.randomUUID().toString().replace("-", "").substring(0, length).toUpperCase();
   }
 
   public void generateAppointmentId() {
-      this.appointmentId = "APT" + generateRandomAlphanumeric(8);
+    this.appointmentId = "APT" + generateRandomAlphanumeric(8);
   }
 
   public void generatePatientId() {
-      this.patientId = "PAT" + generateRandomAlphanumeric(8);
+    this.patientId = "PAT" + generateRandomAlphanumeric(8);
   }
 }

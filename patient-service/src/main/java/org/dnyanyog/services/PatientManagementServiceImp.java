@@ -38,6 +38,8 @@ public class PatientManagementServiceImp {
       newPatient.setMobile(request.getMobile());
       newPatient.setPatientNameEnglish(request.getPatientNameEnglish());
       newPatient.setPatient_name_marathi(request.getPatient_name_marathi());
+      newPatient.generatePatientId();
+      newPatient.setStatus(Patients.Status.ACTIVE);
 
       newPatient = patientRepo.save(newPatient);
       populatePatientResponse(patientResponse, newPatient);
@@ -51,15 +53,14 @@ public class PatientManagementServiceImp {
     return patientResponse;
   }
 
-  public PatientResponse updatePatient(long patient_id, PatientRequest request) {
-    Optional<Patients> optionalPatient = patientRepo.findById(patient_id);
+  public PatientResponse updatePatient(String patient_id, PatientRequest request) {
+    List<Patients> optionalPatient = patientRepo.findByPatientId(patient_id);
 
-    PatientResponse patientResponse = PatientResponse.getInstance();
     if (optionalPatient.isEmpty()) {
       patientResponse.setStatus(ResponseCode.PATIENT_NOT_UPDATED.getStatus());
       patientResponse.setMessage(ResponseCode.PATIENT_NOT_UPDATED.getMessage());
     } else {
-      Patients patients = optionalPatient.get();
+      Patients patients = optionalPatient.get(0);
 
       patients.setAddress(request.getAddress());
       patients.setMobile(request.getMobile());
@@ -79,15 +80,15 @@ public class PatientManagementServiceImp {
     return patientResponse;
   }
 
-  public PatientResponse getSinglePatient(long patient_id) {
-    Optional<Patients> optionalPatient = patientRepo.findById(patient_id);
+  public PatientResponse getSinglePatient(String patient_id) {
+    List<Patients> optionalPatient = patientRepo.findByPatientId(patient_id);
 
     PatientResponse patientResponse = PatientResponse.getInstance();
     if (optionalPatient.isEmpty()) {
       patientResponse.setMessage(ResponseCode.SEARCH_PATIENT_FAILED.getMessage());
       patientResponse.setStatus(ResponseCode.SEARCH_PATIENT_FAILED.getStatus());
     } else {
-      Patients patients = optionalPatient.get();
+      Patients patients = optionalPatient.get(0);
       populatePatientResponse(patientResponse, patients);
       patientResponse.setMessage(ResponseCode.SEARCH_PATIENT.getMessage());
       patientResponse.setStatus(ResponseCode.SEARCH_PATIENT.getStatus());
@@ -95,16 +96,17 @@ public class PatientManagementServiceImp {
     return patientResponse;
   }
 
-  public PatientResponse deletePatient(long patient_id) {
+  public PatientResponse deletePatient(String patient_id) {
 
-    Optional<Patients> optionalPatient = patientRepo.findById(patient_id);
+    List<Patients> optionalPatient = patientRepo.findByPatientId(patient_id);
 
     if (optionalPatient.isEmpty()) {
       patientResponse.setMessage(ResponseCode.NOT_DELETE_PATIENT.getMessage());
       patientResponse.setStatus(ResponseCode.NOT_DELETE_PATIENT.getStatus());
     } else {
 
-      Patients patients = optionalPatient.get();
+      Patients patients = optionalPatient.get(0);
+      patients.setStatus(Patients.Status.DELETED);
       patientRepo.delete(patients);
 
       patientResponse.setMessage(ResponseCode.DELETE_PATIENT.getMessage());

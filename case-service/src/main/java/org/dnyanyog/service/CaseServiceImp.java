@@ -30,11 +30,12 @@ public class CaseServiceImp {
       Cases newCases = new Cases();
       newCases.setCase_number(request.getCase_number());
       newCases.setExamination_date(request.getExamination_date());
-      newCases.setPatientId(request.getPatientId());
       newCases.setPatientNameEnglish(request.getPatientNameEnglish());
       newCases.setPrescription(request.getPrescription());
       newCases.setSymptoms(request.getSymptoms());
       newCases.setStatus(Cases.Status.ACTIVE);
+      newCases.generateCaseId();
+      newCases.generatePatientId();
 
       newCases = caseRepo.save(newCases);
       populatedCaseResponse(caseResponse, newCases);
@@ -47,10 +48,9 @@ public class CaseServiceImp {
     return caseResponse;
   }
 
-  public CaseResponse updateCase(String patient_id, CaseRequest request) {
-    List<Cases> optionalCases = caseRepo.findByPatientId(patient_id);
+  public CaseResponse updateCase(String case_id, CaseRequest request) {
+    List<Cases> optionalCases = caseRepo.findByCaseId(case_id);
 
-    // CaseResponse patientResponse = CaseResponse.getInstance();
     if (optionalCases.isEmpty()) {
       caseResponse.setStatus(ResponseCode.CASE_NOT_UPDATED.getStatus());
       caseResponse.setMessage(ResponseCode.CASE_NOT_UPDATED.getMessage());
@@ -77,7 +77,6 @@ public class CaseServiceImp {
   public CaseResponse getSingleCase(String patient_id) {
     List<Cases> optionalCase = caseRepo.findByPatientId(patient_id);
 
-    //  CaseResponse patientResponse = CaseResponse.getInstance();
     if (optionalCase.isEmpty()) {
       caseResponse.setMessage(ResponseCode.SEARCH_CASE_FAILED.getMessage());
       caseResponse.setStatus(ResponseCode.SEARCH_CASE_FAILED.getStatus());
@@ -90,8 +89,23 @@ public class CaseServiceImp {
     return caseResponse;
   }
 
-  public CaseResponse deleteCase(String patient_id) {
-    List<Cases> optionalCase = caseRepo.findByPatientId(patient_id);
+  public CaseResponse getCase(String case_id) {
+    List<Cases> optionalCase = caseRepo.findByCaseId(case_id);
+
+    if (optionalCase.isEmpty()) {
+      caseResponse.setMessage(ResponseCode.SEARCH_CASE_FAILED.getMessage());
+      caseResponse.setStatus(ResponseCode.SEARCH_CASE_FAILED.getStatus());
+    } else {
+      Cases cases = optionalCase.get(0);
+      populatedCaseResponse(caseResponse, cases);
+      caseResponse.setMessage(ResponseCode.SEARCH_CASE.getMessage());
+      caseResponse.setStatus(ResponseCode.SEARCH_CASE.getStatus());
+    }
+    return caseResponse;
+  }
+
+  public CaseResponse deleteCase(String case_id) {
+    List<Cases> optionalCase = caseRepo.findByCaseId(case_id);
 
     if (optionalCase.isEmpty()) {
       caseResponse.setMessage(ResponseCode.NOT_DELETE_CASE.getMessage());

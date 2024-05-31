@@ -13,4 +13,6 @@ public interface CaseServiceRepository extends JpaRepository<Cases, Long> {
   List<Cases> findBypatientNameEnglish(String patient_name_english);
 
   List<Cases> findByPatientId(String patientId);
+
+  List<Cases> findByCaseId(String caseId);
 }

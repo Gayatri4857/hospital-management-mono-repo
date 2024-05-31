@@ -25,18 +25,18 @@ public class PatientManagementController {
 
   @PostMapping("/api/v1/patient/{patient_id}")
   public PatientResponse updatePatient(
-      @PathVariable long patient_id, @RequestBody PatientRequest request) {
+      @PathVariable String patient_id, @RequestBody PatientRequest request) {
     return patientService.updatePatient(patient_id, request);
   }
 
   @GetMapping(path = "/api/v1/patient/{patient_id}")
-  public PatientResponse getSinglePatient(@PathVariable long patient_id) {
+  public PatientResponse getSinglePatient(@PathVariable String patient_id) {
 
     return patientService.getSinglePatient(patient_id);
   }
 
   @DeleteMapping(path = "/api/v1/patient/{patient_id}")
-  public PatientResponse deletePatient(@PathVariable long patient_id) {
+  public PatientResponse deletePatient(@PathVariable String patient_id) {
     return patientService.deletePatient(patient_id);
   }
 }

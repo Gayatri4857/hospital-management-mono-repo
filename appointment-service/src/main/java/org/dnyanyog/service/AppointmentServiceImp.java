@@ -13,121 +13,119 @@ import org.springframework.stereotype.Service;
 import jakarta.validation.Valid;
 
 @Service
-
 public class AppointmentServiceImp {
-	
-	@Autowired private AppointmentServiceRepository appointmentRepo;
-	@Autowired private AppointmentResponse appointmentResponse;
-	
-	public AppointmentResponse addAppointment(@Valid AppointmentRequest request)throws Exception{
-		try {
-		      List<Appointment> optionalAppointment= appointmentRepo.findBypatientNameEnglish(request.getPatientNameEnglish());
 
-		      if (!optionalAppointment.isEmpty()) {
-		    	  appointmentResponse.setStatus(ResponseCode.APPOINTMENT_FAILED.getStatus());
-		    	  appointmentResponse.setMessage(ResponseCode.APPOINTMENT_FAILED.getMessage());
-		        return appointmentResponse;
-		      }
-		      Appointment newAppointment = new Appointment();
-		      newAppointment.setAppointment_time(request.getAppointment_time());
-		      newAppointment.setPatientNameEnglish(request.getPatientNameEnglish());
+  @Autowired private AppointmentServiceRepository appointmentRepo;
+  @Autowired private AppointmentResponse appointmentResponse;
 
-		      newAppointment.setExamination_date(request.getExamination_date());
-		      newAppointment.setStatus(Appointment.Status.ACTIVE);
-		      newAppointment.generateAppointmentId();
-	            newAppointment.generatePatientId();
-		      
+  public AppointmentResponse addAppointment(@Valid AppointmentRequest request) throws Exception {
+    try {
+      List<Appointment> optionalAppointment =
+          appointmentRepo.findBypatientNameEnglish(request.getPatientNameEnglish());
 
-		      newAppointment = appointmentRepo.save(newAppointment);
-		      populatedCaseResponse(appointmentResponse, newAppointment);
-		      appointmentResponse.setStatus(ResponseCode.APPOINTMENT_ADDED.getStatus());
-		      appointmentResponse.setMessage(ResponseCode.APPOINTMENT_ADDED.getMessage());
-		    } catch (Exception e) {
-		    	appointmentResponse.setStatus(ResponseCode.APPOINTMENT_FAILED.getStatus());
-		    	appointmentResponse.setMessage(ResponseCode.APPOINTMENT_FAILED.getMessage());
-		    }
-		    return appointmentResponse;
-		  
-	}
-	
-	public AppointmentResponse updateAppointment(String appointment_id, AppointmentRequest request) {
-	    List<Appointment> optionalAppointment = appointmentRepo.findByAppointmentId(appointment_id);
+      if (!optionalAppointment.isEmpty()) {
+        appointmentResponse.setStatus(ResponseCode.APPOINTMENT_FAILED.getStatus());
+        appointmentResponse.setMessage(ResponseCode.APPOINTMENT_FAILED.getMessage());
+        return appointmentResponse;
+      }
+      Appointment newAppointment = new Appointment();
+      newAppointment.setAppointment_time(request.getAppointment_time());
+      newAppointment.setPatientNameEnglish(request.getPatientNameEnglish());
 
-	    if (optionalAppointment.isEmpty()) {
-	      appointmentResponse.setStatus(ResponseCode.APPOINTMENT_NOT_UPDATED.getStatus());
-	      appointmentResponse.setMessage(ResponseCode.APPOINTMENT_NOT_UPDATED.getMessage());
-	    } else {
-	      Appointment appointment = optionalAppointment.get(0);
+      newAppointment.setExamination_date(request.getExamination_date());
+      newAppointment.setStatus(Appointment.Status.ACTIVE);
+      newAppointment.generateAppointmentId();
+      newAppointment.generatePatientId();
 
-	      appointment.setAppointment_time(request.getAppointment_time());
-	      appointment.setExamination_date(request.getExamination_date());
-	      appointment.setPatientId(request.getPatientId());
-	      appointment.setPatientNameEnglish(request.getPatientNameEnglish());
-	      appointment.setAppointmentId(request.getAppointmentId());
-	      
-	      appointmentRepo.save(appointment);
+      newAppointment = appointmentRepo.save(newAppointment);
+      populatedCaseResponse(appointmentResponse, newAppointment);
+      appointmentResponse.setStatus(ResponseCode.APPOINTMENT_ADDED.getStatus());
+      appointmentResponse.setMessage(ResponseCode.APPOINTMENT_ADDED.getMessage());
+    } catch (Exception e) {
+      appointmentResponse.setStatus(ResponseCode.APPOINTMENT_FAILED.getStatus());
+      appointmentResponse.setMessage(ResponseCode.APPOINTMENT_FAILED.getMessage());
+    }
+    return appointmentResponse;
+  }
 
-	      populatedCaseResponse(appointmentResponse, appointment);
-	      appointmentResponse.setMessage(ResponseCode.APPOINTMENT_UPDATED.getMessage());
-	      appointmentResponse.setStatus(ResponseCode.APPOINTMENT_UPDATED.getStatus());
-	    }
+  public AppointmentResponse updateAppointment(String appointment_id, AppointmentRequest request) {
+    List<Appointment> optionalAppointment = appointmentRepo.findByAppointmentId(appointment_id);
 
-	    return appointmentResponse;
-	  }
+    if (optionalAppointment.isEmpty()) {
+      appointmentResponse.setStatus(ResponseCode.APPOINTMENT_NOT_UPDATED.getStatus());
+      appointmentResponse.setMessage(ResponseCode.APPOINTMENT_NOT_UPDATED.getMessage());
+    } else {
+      Appointment appointment = optionalAppointment.get(0);
 
-	  public AppointmentResponse getSingleAppointment(String patient_id) {
-	    List<Appointment> optionalAppointment = appointmentRepo.findByPatientId(patient_id);
+      appointment.setAppointment_time(request.getAppointment_time());
+      appointment.setExamination_date(request.getExamination_date());
+      appointment.setPatientId(request.getPatientId());
+      appointment.setPatientNameEnglish(request.getPatientNameEnglish());
+      appointment.setAppointmentId(request.getAppointmentId());
 
-	    if (optionalAppointment.isEmpty()) {
-	      appointmentResponse.setMessage(ResponseCode.SEARCH_APPOINTMENT_FAILED.getMessage());
-	      appointmentResponse.setStatus(ResponseCode.SEARCH_APPOINTMENT_FAILED.getStatus());
-	    } else {
-	      Appointment appointment = optionalAppointment.get(0);
-	      populatedCaseResponse(appointmentResponse, appointment);
-	      appointmentResponse.setMessage(ResponseCode.SEARCH_APPOINTMENT.getMessage());
-	      appointmentResponse.setStatus(ResponseCode.SEARCH_APPOINTMENT.getStatus());
-	    }
-	    return appointmentResponse;
-	  }
-	  
-	  public AppointmentResponse getAppointment(String appointment_id) {
-		    List<Appointment> optionalAppointment = appointmentRepo.findByAppointmentId(appointment_id);
+      appointmentRepo.save(appointment);
 
-		    if (optionalAppointment.isEmpty()) {
-		      appointmentResponse.setMessage(ResponseCode.SEARCH_APPOINTMENT_FAILED.getMessage());
-		      appointmentResponse.setStatus(ResponseCode.SEARCH_APPOINTMENT_FAILED.getStatus());
-		    } else {
-		      Appointment appointment = optionalAppointment.get(0);
-		      populatedCaseResponse(appointmentResponse, appointment);
-		      appointmentResponse.setMessage(ResponseCode.SEARCH_APPOINTMENT.getMessage());
-		      appointmentResponse.setStatus(ResponseCode.SEARCH_APPOINTMENT.getStatus());
-		    }
-		    return appointmentResponse;
-		  }
+      populatedCaseResponse(appointmentResponse, appointment);
+      appointmentResponse.setMessage(ResponseCode.APPOINTMENT_UPDATED.getMessage());
+      appointmentResponse.setStatus(ResponseCode.APPOINTMENT_UPDATED.getStatus());
+    }
 
-	  public AppointmentResponse deleteAppointment(String appointment_id) {
-	    List<Appointment> optionalAppointment = appointmentRepo.findByAppointmentId(appointment_id);
+    return appointmentResponse;
+  }
 
-	    if (optionalAppointment.isEmpty()) {
-	    	appointmentResponse.setMessage(ResponseCode.NOT_DELETE_APPOINTMENT.getMessage());
-	    	appointmentResponse.setStatus(ResponseCode.NOT_DELETE_APPOINTMENT.getStatus());
-	    } else {
-	      Appointment appointment = optionalAppointment.get(0);
-	      appointment.setStatus(Appointment.Status.DELETED);
-	      appointmentRepo.save(appointment);
+  public AppointmentResponse getSingleAppointment(String patient_id) {
+    List<Appointment> optionalAppointment = appointmentRepo.findByPatientId(patient_id);
 
-	      appointmentResponse.setMessage(ResponseCode.DELETE_APPOINTMENT.getMessage());
-	      appointmentResponse.setStatus(ResponseCode.DELETE_APPOINTMENT.getStatus());
-	      populatedCaseResponse(appointmentResponse, appointment);
-	    }
-	    return appointmentResponse;
-	  }
-	private void populatedCaseResponse(AppointmentResponse response, Appointment appointment) {
-	    response.setAppointment_time(appointment.getAppointment_time());
-	    response.setExamination_date(appointment.getExamination_date());
-	    response.setPatientId(appointment.getPatientId());
-	    response.setPatientNameEnglish(appointment.getPatientNameEnglish());
-	    response.setAppointmentId(appointment.getAppointmentId());
-	  
-	  }
+    if (optionalAppointment.isEmpty()) {
+      appointmentResponse.setMessage(ResponseCode.SEARCH_APPOINTMENT_FAILED.getMessage());
+      appointmentResponse.setStatus(ResponseCode.SEARCH_APPOINTMENT_FAILED.getStatus());
+    } else {
+      Appointment appointment = optionalAppointment.get(0);
+      populatedCaseResponse(appointmentResponse, appointment);
+      appointmentResponse.setMessage(ResponseCode.SEARCH_APPOINTMENT.getMessage());
+      appointmentResponse.setStatus(ResponseCode.SEARCH_APPOINTMENT.getStatus());
+    }
+    return appointmentResponse;
+  }
+
+  public AppointmentResponse getAppointment(String appointment_id) {
+    List<Appointment> optionalAppointment = appointmentRepo.findByAppointmentId(appointment_id);
+
+    if (optionalAppointment.isEmpty()) {
+      appointmentResponse.setMessage(ResponseCode.SEARCH_APPOINTMENT_FAILED.getMessage());
+      appointmentResponse.setStatus(ResponseCode.SEARCH_APPOINTMENT_FAILED.getStatus());
+    } else {
+      Appointment appointment = optionalAppointment.get(0);
+      populatedCaseResponse(appointmentResponse, appointment);
+      appointmentResponse.setMessage(ResponseCode.SEARCH_APPOINTMENT.getMessage());
+      appointmentResponse.setStatus(ResponseCode.SEARCH_APPOINTMENT.getStatus());
+    }
+    return appointmentResponse;
+  }
+
+  public AppointmentResponse deleteAppointment(String appointment_id) {
+    List<Appointment> optionalAppointment = appointmentRepo.findByAppointmentId(appointment_id);
+
+    if (optionalAppointment.isEmpty()) {
+      appointmentResponse.setMessage(ResponseCode.NOT_DELETE_APPOINTMENT.getMessage());
+      appointmentResponse.setStatus(ResponseCode.NOT_DELETE_APPOINTMENT.getStatus());
+    } else {
+      Appointment appointment = optionalAppointment.get(0);
+      appointment.setStatus(Appointment.Status.DELETED);
+      appointmentRepo.save(appointment);
+
+      appointmentResponse.setMessage(ResponseCode.DELETE_APPOINTMENT.getMessage());
+      appointmentResponse.setStatus(ResponseCode.DELETE_APPOINTMENT.getStatus());
+      populatedCaseResponse(appointmentResponse, appointment);
+    }
+    return appointmentResponse;
+  }
+
+  private void populatedCaseResponse(AppointmentResponse response, Appointment appointment) {
+    response.setAppointment_time(appointment.getAppointment_time());
+    response.setExamination_date(appointment.getExamination_date());
+    response.setPatientId(appointment.getPatientId());
+    response.setPatientNameEnglish(appointment.getPatientNameEnglish());
+    response.setAppointmentId(appointment.getAppointmentId());
+  }
 }

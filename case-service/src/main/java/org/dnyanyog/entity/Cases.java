@@ -1,5 +1,7 @@
 package org.dnyanyog.entity;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -33,6 +35,9 @@ public class Cases {
 
   @Column(name = "patient_id", nullable = false, insertable = true, updatable = false)
   private String patientId;
+
+  @Column(name = "case_id", nullable = false, insertable = true, updatable = false)
+  private String caseId;
 
   @Column private String case_number;
 
@@ -113,5 +118,17 @@ public class Cases {
 
   public void setPrescription(String prescription) {
     this.prescription = prescription;
+  }
+
+  private String generateRandomAlphanumeric(int length) {
+    return UUID.randomUUID().toString().replace("-", "").substring(0, length).toUpperCase();
+  }
+
+  public void generateCaseId() {
+    this.caseId = "CAS" + generateRandomAlphanumeric(8);
+  }
+
+  public void generatePatientId() {
+    this.patientId = "PAT" + generateRandomAlphanumeric(8);
   }
 }

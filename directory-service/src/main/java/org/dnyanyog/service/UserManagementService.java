@@ -8,9 +8,9 @@ import jakarta.validation.Valid;
 public interface UserManagementService {
   public UserResponse addUser(@Valid UserRequest request) throws Exception;
 
-  public UserResponse updateUser(long patient_id, UserRequest request);
+  public UserResponse updateUser(String user_id, UserRequest request);
 
-  public UserResponse getSingleUser(long patient_id);
+  public UserResponse getSingleUser(String user_id);
 
-  public UserResponse deleteUser(long patient_id);
+  public UserResponse deleteUser(String user_id);
 }

@@ -25,20 +25,20 @@ public class UserManagementController {
     return userService.addUser(userRequest);
   }
 
-  @GetMapping(path = "/api/v1/directory/{patient_id}")
-  public UserResponse getSingleUser(@PathVariable long patient_id) {
+  @GetMapping(path = "/api/v1/directory/{user_id}")
+  public UserResponse getSingleUser(@PathVariable String user_id) {
 
-    return userService.getSingleUser(patient_id);
+    return userService.getSingleUser(user_id);
   }
 
-  @DeleteMapping(path = "/api/v1/directory/{patient_id}")
-  public UserResponse deleteUser(@PathVariable long patient_id) {
-    return userService.deleteUser(patient_id);
+  @DeleteMapping(path = "/api/v1/directory/{user_id}")
+  public UserResponse deleteUser(@PathVariable String user_id) {
+    return userService.deleteUser(user_id);
   }
 
-  @PostMapping(path = "/api/v1/directory/{patient_id}")
+  @PostMapping(path = "/api/v1/directory/{user_id}")
   public UserResponse updateUser(
-      @PathVariable long patient_id, @RequestBody UserRequest userRequest) {
-    return userService.updateUser(patient_id, userRequest);
+      @PathVariable String user_id, @RequestBody UserRequest userRequest) {
+    return userService.updateUser(user_id, userRequest);
   }
 }

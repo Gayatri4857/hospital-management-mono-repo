@@ -2,6 +2,9 @@ package org.dnyanyog.dto;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Component
 public class UserResponse {
 
@@ -13,18 +16,18 @@ public class UserResponse {
   private String confirm_password;
   private String message;
   private String status;
-  private long patient_id;
+  private String userId;
 
   public static UserResponse getInstance() {
     return new UserResponse();
   }
 
-  public long getPatient_id() {
-    return patient_id;
+  public String getUserId() {
+    return userId;
   }
 
-  public void setPatient_id(long patient_id) {
-    this.patient_id = patient_id;
+  public void setUserId(String userId) {
+    this.userId = userId;
   }
 
   public String getUserName() {

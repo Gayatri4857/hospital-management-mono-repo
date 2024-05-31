@@ -24,10 +24,9 @@ public class CaseServiceController {
     return caseService.addCase(caseRequest);
   }
 
-  @PostMapping(path = "/api/v1/case/{patient_id}")
-  public CaseResponse updateCase(
-      @PathVariable String patient_id, @RequestBody CaseRequest request) {
-    return caseService.updateCase(patient_id, request);
+  @PostMapping(path = "/api/v1/case/{case_id}")
+  public CaseResponse updateCase(@PathVariable String case_id, @RequestBody CaseRequest request) {
+    return caseService.updateCase(case_id, request);
   }
 
   @GetMapping(path = "/api/v1/case/{patient_id}")
@@ -36,8 +35,14 @@ public class CaseServiceController {
     return caseService.getSingleCase(patient_id);
   }
 
-  @DeleteMapping(path = "/api/v1/case/{patient_id}")
-  public CaseResponse deleteCase(@PathVariable String patient_id) {
-    return caseService.deleteCase(patient_id);
+  @GetMapping(path = "/api/v1/case/patient/{case_id}")
+  public CaseResponse getCase(@PathVariable String case_id) {
+
+    return caseService.getCase(case_id);
+  }
+
+  @DeleteMapping(path = "/api/v1/case/{case_id}")
+  public CaseResponse deleteCase(@PathVariable String case_id) {
+    return caseService.deleteCase(case_id);
   }
 }

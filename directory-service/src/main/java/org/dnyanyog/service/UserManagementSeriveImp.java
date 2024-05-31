@@ -29,7 +29,6 @@ public class UserManagementSeriveImp {
 
   public UserResponse addUser(@Valid UserRequest request) throws Exception {
     try {
-      // UserResponse userResponse = UserResponse.getInstance();
 
       if (!request.isPasswordMatching()) {
         throw new PasswordMismatchException("Password and Confirm Password do not match");
@@ -53,6 +52,7 @@ public class UserManagementSeriveImp {
       newUser.setUserName(request.getUserName());
       newUser.setStatus(Users.Status.ACTIVE);
       newUser.setEncryptionKey(userKey);
+      newUser.generateUser();
 
       newUser = userRepo.save(newUser);
 
@@ -68,15 +68,15 @@ public class UserManagementSeriveImp {
     return userResponse;
   }
 
-  public UserResponse updateUser(long patient_id, UserRequest request) {
+  public UserResponse updateUser(String user_id, UserRequest request) {
 
-    Optional<Users> optionalUser = userRepo.findById(patient_id);
+    List<Users> optionalUser = userRepo.findByuserId(user_id);
 
     if (optionalUser.isEmpty()) {
       userResponse.setMessage(ResponseCode.USER_NOT_UPDATED.getMessage());
       userResponse.setStatus(ResponseCode.USER_NOT_UPDATED.getStatus());
     } else {
-      Users user = optionalUser.get();
+      Users user = optionalUser.get(0);
       String userKey = user.getEncryptionKey();
 
       if (request.getConfirm_password() != null && userKey != null) {
@@ -99,15 +99,15 @@ public class UserManagementSeriveImp {
     return userResponse;
   }
 
-  public UserResponse getSingleUser(long patient_id) {
-    Optional<Users> optionalUser = userRepo.findById(patient_id);
+  public UserResponse getSingleUser(String user_id) {
+    List<Users> optionalUser = userRepo.findByuserId(user_id);
 
     UserResponse userResponse = UserResponse.getInstance();
     if (optionalUser.isEmpty()) {
       userResponse.setMessage(ResponseCode.SEARCH_USER_FAILED.getMessage());
       userResponse.setStatus(ResponseCode.SEARCH_USER_FAILED.getStatus());
     } else {
-      Users user = optionalUser.get();
+      Users user = optionalUser.get(0);
       populateUserResponse(userResponse, user);
       userResponse.setMessage(ResponseCode.SEARCH_USER.getMessage());
       userResponse.setStatus(ResponseCode.SEARCH_USER.getStatus());
@@ -115,14 +115,13 @@ public class UserManagementSeriveImp {
     return userResponse;
   }
 
-  public UserResponse deleteUser(long patient_id) {
-    Optional<Users> optionalUser = userRepo.findById(patient_id);
-
+  public UserResponse deleteUser(String user_id) {
+    List<Users> optionalUser = userRepo.findByuserId(user_id);
     if (optionalUser.isEmpty()) {
       userResponse.setMessage(ResponseCode.NOT_DELETE_USER.getMessage());
       userResponse.setStatus(ResponseCode.NOT_DELETE_USER.getStatus());
     } else {
-      Users user = optionalUser.get();
+      Users user = optionalUser.get(0);
       user.setStatus(Users.Status.DELETED);
       userRepo.save(user);
 

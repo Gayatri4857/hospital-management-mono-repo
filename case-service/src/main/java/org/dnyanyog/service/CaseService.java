@@ -8,9 +8,11 @@ import jakarta.validation.Valid;
 public interface CaseService {
   public CaseResponse addCase(@Valid CaseRequest request) throws Exception;
 
-  public CaseResponse updateCase(String patient_id, CaseRequest request);
+  public CaseResponse updateCase(String case_id, CaseRequest request);
 
   public CaseResponse getSingleCase(String patient_id);
 
-  public CaseResponse deleteCase(String patient_id);
+  public CaseResponse deleteCase(String case_id);
+
+  public CaseResponse getCase(String case_id);
 }

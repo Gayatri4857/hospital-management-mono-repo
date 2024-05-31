@@ -1,5 +1,7 @@
 package org.dnyanyog.entity;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,8 +22,11 @@ public class Users {
 
   @GeneratedValue
   @Id
-  @Column(name = "PatientId", nullable = false, insertable = true, updatable = false)
-  private long patient_id;
+  @Column(name = "patient_code", nullable = false, insertable = true, updatable = false)
+  private long patient_code;
+
+  @Column(name = "user_id", nullable = false, insertable = true, updatable = false, length = 50)
+  private String userId;
 
   @Column(name = "user_name", nullable = false, insertable = true, updatable = false, length = 50)
   private String userName;
@@ -56,12 +61,20 @@ public class Users {
     this.encryptionKey = encryptionKey;
   }
 
-  public long getPatient_id() {
-    return patient_id;
+  public long getPatient_code() {
+    return patient_code;
   }
 
-  public void setPatient_id(long patient_id) {
-    this.patient_id = patient_id;
+  public void setPatient_code(long patient_code) {
+    this.patient_code = patient_code;
+  }
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
   }
 
   public String getUserName() {
@@ -118,5 +131,10 @@ public class Users {
 
   public void setStatus(Status status) {
     this.status = status;
+  }
+
+  public Users generateUser() {
+    this.userId = "USR" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+    return this;
   }
 }

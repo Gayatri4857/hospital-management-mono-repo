@@ -8,9 +8,9 @@ import jakarta.validation.Valid;
 public interface PatientManagementService {
   public PatientResponse addPatient(@Valid PatientRequest request) throws Exception;
 
-  public PatientResponse updatePatient(long patient_id, PatientRequest request);
+  public PatientResponse updatePatient(String patient_id, PatientRequest request);
 
-  public PatientResponse getSinglePatient(long patient_id);
+  public PatientResponse getSinglePatient(String patient_id);
 
-  public PatientResponse deletePatient(long patient_id);
+  public PatientResponse deletePatient(String patient_id);
 }
