@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import login_screen.LoginScreen;
 import patient_add.PatientAddScreen;
+import patient_delete.PatientDeleteScreen;
+import patient_edit.PatientEditScreen;
 import user_page.UserScreen;
 
 public class PatientScreenController {
@@ -67,11 +69,29 @@ public class PatientScreenController {
     }
   }
 
-  public void Search_Patient(ActionEvent event) throws IOException {}
+  public void Search_Patient(ActionEvent event) throws IOException {
+    try {
+      PatientEditScreen.showPatientEditScreen();
+    } catch (Exception e) { // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 
-  public void Edit_Patient(ActionEvent event) throws IOException {}
+  public void Edit_Patient(ActionEvent event) throws IOException {
+    try {
+      PatientEditScreen.showPatientEditScreen();
+    } catch (Exception e) { // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 
-  public void Delete_Patient(ActionEvent event) throws IOException {}
+  public void Delete_Patient(ActionEvent event) throws IOException {
+    try {
+      PatientDeleteScreen.showPatientDeleteScreen();
+    } catch (Exception e) { // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 
   public void LogoutButton(ActionEvent event) throws IOException {
     try {

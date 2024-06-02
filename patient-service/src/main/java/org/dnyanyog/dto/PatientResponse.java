@@ -1,5 +1,6 @@
 package org.dnyanyog.dto;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,6 +16,15 @@ public class PatientResponse {
   private String first_examination_date;
   private String address;
   private long patient_id;
+  @Autowired private PatientData patientData;
+
+  public PatientData getPatientData() {
+    return patientData;
+  }
+
+  public void setPatientData(PatientData patientData) {
+    this.patientData = patientData;
+  }
 
   public long getPatient_id() {
     return patient_id;

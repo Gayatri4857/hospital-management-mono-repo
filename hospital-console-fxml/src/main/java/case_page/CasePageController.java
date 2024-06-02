@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import appointment_page.AppointmentPageScreen;
 import case_add.CaseAddScreen;
+import case_delete.DeleteCaseScreen;
+import case_edit.EditCaseScreen;
 import dashboard_page.DashboardScreen;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -73,11 +75,29 @@ public class CasePageController {
     }
   }
 
-  public void Search_Case(ActionEvent event) throws IOException {}
+  public void Search_Case(ActionEvent event) throws IOException {
+    try {
+      EditCaseScreen.showCaseEditScreen();
+    } catch (Exception e) { // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 
-  public void Edit_Case(ActionEvent event) throws IOException {}
+  public void Edit_Case(ActionEvent event) throws IOException {
+    try {
+      EditCaseScreen.showCaseEditScreen();
+    } catch (Exception e) { // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 
-  public void Delete_Case(ActionEvent event) throws IOException {}
+  public void Delete_Case(ActionEvent event) throws IOException {
+    try {
+      DeleteCaseScreen.showCaseDeleteScreen();
+    } catch (Exception e) { // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 
   public void LogoutButton(ActionEvent event) throws IOException {
     try {

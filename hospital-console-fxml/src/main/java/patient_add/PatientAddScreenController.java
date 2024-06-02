@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -23,7 +24,7 @@ import login_screen.LoginScreen;
 import patient_page.PatientScreen;
 import user_page.UserScreen;
 
-public class PatientAddScreenController {
+public class PatientAddScreenController implements Initializable {
   @FXML private Button patients;
 
   @FXML private Button cases;

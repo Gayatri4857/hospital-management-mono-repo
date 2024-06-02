@@ -16,6 +16,16 @@ public class PatientResponse {
   private String address;
   private long patient_id;
 
+  private PatientRequest patientData;
+
+  public PatientRequest getPatientData() {
+    return patientData;
+  }
+
+  public void setPatientData(PatientRequest patientData) {
+    this.patientData = patientData;
+  }
+
   public long getPatient_id() {
     return patient_id;
   }

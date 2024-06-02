@@ -13,4 +13,6 @@ public interface PatientManagementService {
   public PatientResponse getSinglePatient(String patient_id);
 
   public PatientResponse deletePatient(String patient_id);
+
+  public PatientResponse getPatientName(String patient_name_english);
 }

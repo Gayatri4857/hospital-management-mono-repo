@@ -9,13 +9,14 @@ import dto.LoginResponse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class LoginScreenController {
 
   @FXML private TextField mobile_number;
 
-  @FXML private TextField password;
+  @FXML private PasswordField password;
 
   @FXML private Button next_button;
 

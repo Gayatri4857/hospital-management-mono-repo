@@ -35,6 +35,12 @@ public class PatientManagementController {
     return patientService.getSinglePatient(patient_id);
   }
 
+  @GetMapping(path = "/api/v1/patient/name/{patient_name_english}")
+  public PatientResponse getPatientName(@PathVariable String patient_name_english) {
+
+    return patientService.getPatientName(patient_name_english);
+  }
+
   @DeleteMapping(path = "/api/v1/patient/{patient_id}")
   public PatientResponse deletePatient(@PathVariable String patient_id) {
     return patientService.deletePatient(patient_id);

@@ -22,7 +22,7 @@ public class PatientManagementServiceImp {
   public PatientResponse addPatient(@Valid PatientRequest request) throws Exception {
     try {
       List<Patients> optionalPatient =
-          patientRepo.findBypatientNameEnglish(request.getPatientNameEnglish());
+          patientRepo.findByPatientNameEnglish(request.getPatientNameEnglish());
 
       if (!optionalPatient.isEmpty()) {
         patientResponse.setStatus(ResponseCode.PATIENT_FAILED.getStatus());
@@ -82,6 +82,22 @@ public class PatientManagementServiceImp {
 
   public PatientResponse getSinglePatient(String patient_id) {
     List<Patients> optionalPatient = patientRepo.findByPatientId(patient_id);
+
+    PatientResponse patientResponse = PatientResponse.getInstance();
+    if (optionalPatient.isEmpty()) {
+      patientResponse.setMessage(ResponseCode.SEARCH_PATIENT_FAILED.getMessage());
+      patientResponse.setStatus(ResponseCode.SEARCH_PATIENT_FAILED.getStatus());
+    } else {
+      Patients patients = optionalPatient.get(0);
+      populatePatientResponse(patientResponse, patients);
+      patientResponse.setMessage(ResponseCode.SEARCH_PATIENT.getMessage());
+      patientResponse.setStatus(ResponseCode.SEARCH_PATIENT.getStatus());
+    }
+    return patientResponse;
+  }
+
+  public PatientResponse getPatientName(String patient_name_english) {
+    List<Patients> optionalPatient = patientRepo.findByPatientNameEnglish(patient_name_english);
 
     PatientResponse patientResponse = PatientResponse.getInstance();
     if (optionalPatient.isEmpty()) {
